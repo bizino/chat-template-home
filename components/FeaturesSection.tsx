@@ -16,7 +16,7 @@ export default async function FeaturesSection() {
     const description = siteInfo?.featuresDescription || FALLBACK_DESCRIPTION
 
     return (
-        <section className="bg-gradient-to-b from-white to-blue-50 w-full py-8 px-4">
+        <section className="bg-gradient-to-t from-white to-blue-50 w-full py-8 px-4">
             <div className="container mx-auto">
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {features.map((feature) => (

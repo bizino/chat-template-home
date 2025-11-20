@@ -17,7 +17,7 @@ export default async function ReasonsSection() {
     const colClass = reasons.length === 4 ? 'md:grid-cols-4' : 'md:grid-cols-3'
 
     return (
-        <section className="bg-gradient-to-t from-white to-blue-50 w-full py-8 px-4">
+        <section className="bg-gradient-to-b from-white to-blue-50 w-full py-8 px-4">
             <div className="container mx-auto">
                 <div className="text-center mb-12 space-y-3">
                     <h2 className="text-4xl font-bold">{title}</h2>
