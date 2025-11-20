@@ -36,6 +36,7 @@ export async function POST(req: Request) {
 
         return res;
     } catch (err: any) {
+        console.log("Error:", err);
         return NextResponse.json(
             { message: "Proxy error", error: err.message },
             { status: 500 }

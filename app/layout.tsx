@@ -33,8 +33,19 @@ export async function generateMetadata(): Promise<Metadata> {
         images: siteInfo.ogImage ? [{ url: siteInfo.ogImage }] : undefined,
       },
       icons: {
-        icon: siteInfo.logo ? siteInfo.logo : undefined,
-        shortcut: siteInfo.logo ? siteInfo.logo : undefined,
+        icon: [
+          {
+            url: siteInfo.logo || "/icons/logo.png",
+            type: "image/png",
+          },
+        ],
+        shortcut: siteInfo.logo || "/icons/logo.png",
+        apple: siteInfo.logo ? [
+          {
+            url: siteInfo.logo,
+            type: "image/png",
+          },
+        ] : undefined,
       },
       twitter: {
         card: siteInfo.twitterCard as "summary" | "summary_large_image" | "app" | "player" | undefined,
@@ -69,7 +80,6 @@ export default async function RootLayout({
             <div className="flex flex-col min-h-screen">
               <Header />
               {children}
-              <Footer />
             </div>
           </Providers>
         </SiteInfoProvider>

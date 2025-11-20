@@ -25,39 +25,45 @@ export default async function Home() {
       <Banner />
       <FeaturesSection />
       <ReasonsSection />
+
+      <section className="bg-gradient-to-t from-white to-blue-50 w-full py-8 px-4">
+        <div className="container mx-auto space-y-4">
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight">Bài viết mới nhất</h2>
+            <p className="text-muted-foreground mt-2">
+              Khám phá các bài viết về AI và công nghệ
+            </p>
+          </div>
+
+          {posts.length > 0 ? (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {posts.map((post: any) => (
+                <PostCard key={post.id} post={post} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">Chưa có bài viết nào. Hãy quay lại sau!</p>
+            </div>
+          )}
+
+          {posts.length > 0 && (
+            <div className="mt-8 text-center">
+              <a
+                href="/bai-viet"
+                className="text-primary hover:underline font-medium"
+              >
+                Xem tất cả bài viết →
+              </a>
+            </div>
+          )}
+        </div>
+      </section>
+      <div
+        className="pb-32"
+      />
       <ChatBar />
 
-      <section className="container py-12 px-4">
-        <div className="mb-8 ">
-          <h2 className="text-3xl font-bold tracking-tight">Bài viết mới nhất</h2>
-          <p className="text-muted-foreground mt-2">
-            Khám phá các bài viết về AI và công nghệ
-          </p>
-        </div>
-
-        {posts.length > 0 ? (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {posts.map((post: any) => (
-              <PostCard key={post.id} post={post} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">Chưa có bài viết nào. Hãy quay lại sau!</p>
-          </div>
-        )}
-
-        {posts.length > 0 && (
-          <div className="mt-8 text-center">
-            <a
-              href="/bai-viet"
-              className="text-primary hover:underline font-medium"
-            >
-              Xem tất cả bài viết →
-            </a>
-          </div>
-        )}
-      </section>
     </main>
   )
 }

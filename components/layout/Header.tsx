@@ -5,9 +5,17 @@ import { usePathname, useRouter } from "next/navigation"
 import { useSupabaseSession } from "@/hooks/useSupabaseSession"
 import { createSupabaseClient } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
-import { MessageSquare, User, LogOut, BookOpen } from "lucide-react"
+import { MessageSquare, User, LogOut, BookOpen, Phone, Menu, X } from "lucide-react"
 import { useSiteInfo } from "@/components/providers/SiteInfoProvider"
 import Image from "next/image"
+import { useState } from "react"
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet"
 
 export default function Header() {
     const { user, loading } = useSupabaseSession()
@@ -15,13 +23,13 @@ export default function Header() {
     const router = useRouter()
     const supabase = createSupabaseClient()
     const siteInfo = useSiteInfo()
-
-
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     const handleSignOut = async () => {
         await supabase.auth.signOut()
         router.push("/login")
         router.refresh()
+        setMobileMenuOpen(false)
     }
     if (pathname?.startsWith("/admin")) {
         return null
@@ -38,24 +46,31 @@ export default function Header() {
                     <span className="hidden sm:block text-lg font-semibold sm:text-xl">{siteInfo.name}</span>
                 </Link>
 
-                <nav className="flex items-center gap-2">
+                {/* Desktop Navigation */}
+                <nav className="hidden md:flex items-center gap-2">
                     <Link href="/bai-viet">
                         <Button variant="ghost" size="sm" className="gap-2 px-3 sm:px-4">
                             <BookOpen className="h-4 w-4" />
-                            <span className="hidden sm:inline">Bài viết</span>
+                            <span>Bài viết</span>
                         </Button>
                     </Link>
                     <Link href="/tro-chuyen">
                         <Button variant="ghost" size="sm" className="gap-2 px-3 sm:px-4">
                             <MessageSquare className="h-4 w-4" />
-                            <span className="hidden sm:inline">Trò chuyện</span>
+                            <span>Trò chuyện</span>
+                        </Button>
+                    </Link>
+                    <Link href="/lien-he">
+                        <Button variant="ghost" size="sm" className="gap-2 px-3 sm:px-4">
+                            <Phone className="h-4 w-4" />
+                            <span>Liên hệ</span>
                         </Button>
                     </Link>
 
                     {!loading && user ? (
                         <>
-                            {user.role === "admin" && (
-                                <Link href="/admin" className="hidden sm:block">
+                            {(user.role === "admin" || user.role === "superadmin") && (
+                                <Link href="/admin">
                                     <Button variant="ghost" size="sm">Quản lý</Button>
                                 </Link>
                             )}
@@ -66,18 +81,82 @@ export default function Header() {
                                 className="gap-2 px-3 sm:px-4"
                             >
                                 <LogOut className="h-4 w-4" />
-                                <span className="hidden sm:inline">Đăng xuất</span>
+                                <span>Đăng xuất</span>
                             </Button>
                         </>
                     ) : (
                         <Link href="/login">
                             <Button variant="default" size="sm" className="gap-2 px-3 sm:px-4">
                                 <User className="h-4 w-4" />
-                                <span className="hidden sm:inline">Đăng nhập</span>
+                                <span>Đăng nhập</span>
                             </Button>
                         </Link>
                     )}
                 </nav>
+
+                {/* Mobile Menu */}
+                <div className="md:hidden">
+                    <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+                        <SheetTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                                <Menu className="h-5 w-5" />
+                                <span className="sr-only">Mở menu</span>
+                            </Button>
+                        </SheetTrigger>
+                        <SheetContent side="left" className="w-3/4 sm:max-w-sm p-2">
+                            <SheetHeader>
+                                <SheetTitle className="text-left">{siteInfo.name || siteInfo.title}</SheetTitle>
+                            </SheetHeader>
+                            <nav className="flex flex-col gap-2 mt-6">
+                                <Link href="/bai-viet" onClick={() => setMobileMenuOpen(false)}>
+                                    <Button variant="ghost" className="w-full justify-start gap-2">
+                                        <BookOpen className="h-4 w-4" />
+                                        Bài viết
+                                    </Button>
+                                </Link>
+                                <Link href="/tro-chuyen" onClick={() => setMobileMenuOpen(false)}>
+                                    <Button variant="ghost" className="w-full justify-start gap-2">
+                                        <MessageSquare className="h-4 w-4" />
+                                        Trò chuyện
+                                    </Button>
+                                </Link>
+                                <Link href="/lien-he" onClick={() => setMobileMenuOpen(false)}>
+                                    <Button variant="ghost" className="w-full justify-start gap-2">
+                                        <Phone className="h-4 w-4" />
+                                        Liên hệ
+                                    </Button>
+                                </Link>
+
+                                {!loading && user ? (
+                                    <>
+                                        {(user.role === "admin" || user.role === "superadmin") && (
+                                            <Link href="/admin" onClick={() => setMobileMenuOpen(false)}>
+                                                <Button variant="ghost" className="w-full justify-start">
+                                                    Quản lý
+                                                </Button>
+                                            </Link>
+                                        )}
+                                        <Button
+                                            variant="ghost"
+                                            onClick={handleSignOut}
+                                            className="w-full justify-start gap-2"
+                                        >
+                                            <LogOut className="h-4 w-4" />
+                                            Đăng xuất
+                                        </Button>
+                                    </>
+                                ) : (
+                                    <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
+                                        <Button variant="default" className="w-full justify-start gap-2">
+                                            <User className="h-4 w-4" />
+                                            Đăng nhập
+                                        </Button>
+                                    </Link>
+                                )}
+                            </nav>
+                        </SheetContent>
+                    </Sheet>
+                </div>
             </div>
         </header>
     )
