@@ -12,6 +12,7 @@ import { ImageUpload } from "@/components/editor/image-upload"
 import { Plus, Edit, Trash2, GripVertical, Eye, EyeOff } from "lucide-react"
 import { getImageUrl } from "@/lib/image-utils"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Spinner } from "@/components/ui/spinner"
 import {
     Dialog,
     DialogContent,
